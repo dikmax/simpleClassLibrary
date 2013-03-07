@@ -1,0 +1,1 @@
+Simple class library. Specially for [Frontend DEV Conf '13](http://www.frontendconf.by/).
