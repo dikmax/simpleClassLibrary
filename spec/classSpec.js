@@ -53,15 +53,13 @@ describe("Class Library", function () {
 
     describe('__super__ method', function () {
         it('should execute super method', function () {
-            ParentClass = function () {
-            };
+            ParentClass = function () {};
             ParentClass.__extends__(Object);
             ParentClass.NAME = 'ParentClass';
             ParentClass.prototype.method = function () {
                 this.prop = 1;
             };
-            ChildClass = function () {
-            };
+            ChildClass = function () {};
             ChildClass.__extends__(ParentClass);
             ChildClass.NAME = 'ChildClass';
             ChildClass.prototype.method = function () {
@@ -90,8 +88,19 @@ describe("Class Library", function () {
         });
 
         it('should pass parameters', function () {
-            // TODO
-            expect(true).toBe(false);
+            ParentClass = function (prop, prop2) {
+                this.prop = prop;
+                this.prop2 = prop2;
+            };
+            ParentClass.__extends__(Object);
+            ChildClass = function (prop, prop2) {
+                this.__super__(prop, prop2);
+            };
+            ChildClass.__extends__(ParentClass);
+            obj = new ChildClass(1, 2);
+
+            expect(obj.prop).toEqual(1);
+            expect(obj.prop2).toEqual(2);
         });
 
         // Checking exceptions
@@ -107,9 +116,35 @@ describe("Class Library", function () {
             }).toThrow();
         });
 
+        it('should throw exception if constructor property is not function', function () {
+            ChildClass = function () {};
+            ChildClass.prototype.method = function () {
+                this.__super__();
+            };
+            obj = new ChildClass();
+            obj.contructor = obj;
+
+            expect(function () {
+                obj.method();
+            }).toThrow();
+        });
+
+
         it('should throw exception if no parent method found', function () {
             // TODO
-            expect(true).toBe(false);
+            ParentClass = function () {};
+            ParentClass.__extends__(Object);
+
+            ChildClass = function () {};
+            ChildClass.__extends__(ParentClass);
+            ChildClass.prototype.method = function () {
+                this.__super__();
+            }
+            obj = new ChildClass();
+
+            expect(function () {
+                obj.method();
+            }).toThrow();
         });
 
         it('should throw exception if method not found in prototype', function () {
@@ -132,8 +167,7 @@ describe("Class Library", function () {
 
     describe('Static properties', function () {
         it('object should have access to static class members through static', function () {
-            ParentClass = function () {
-            };
+            ParentClass = function () {};
             ParentClass.__extends__(Object);
             ParentClass.static.field = field;
             ParentClass.static.method = method;
@@ -145,8 +179,7 @@ describe("Class Library", function () {
         });
 
         it('should inherit static class members', function () {
-            ParentClass = function () {
-            };
+            ParentClass = function () {};
             ParentClass.__extends__(Object);
             ParentClass.static.field = field;
             ParentClass.static.method = method;
@@ -160,14 +193,12 @@ describe("Class Library", function () {
         });
 
         it('should allow __super__ call for static methods', function () {
-            ParentClass = function () {
-            };
+            ParentClass = function () {};
             ParentClass.__extends__(Object);
             ParentClass.static.method = function () {
                 this.prop = 1;
             };
-            ChildClass = function () {
-            };
+            ChildClass = function () {};
             ChildClass.__extends__(ParentClass);
             ChildClass.static.method = function () {
                 this.__super__();
@@ -179,13 +210,31 @@ describe("Class Library", function () {
 
         // Checking exceptions
         it('should throw exception if no parent method found', function () {
-            // TODO
-            expect(true).toBe(false);
+            ParentClass = function () {};
+            ParentClass.__extends__(Object);
+            ChildClass = function () {};
+            ChildClass.__extends__(ParentClass);
+            ChildClass.static.method = function () {
+                this.__super__();
+            };
+
+            expect(function () {
+                ChildClass.static.method();
+            }).toThrow();
         });
 
         it('should throw exception if method not found in context object', function () {
-            // TODO
-            expect(true).toBe(false);
+            ParentClass = function () {};
+            ParentClass.__extends__(Object);
+            ChildClass = function () {};
+            ChildClass.__extends__(ParentClass);
+            ChildClass.static.method = function () {
+                this.__super__.call({});
+            };
+
+            expect(function () {
+                ChildClass.static.method();
+            }).toThrow();
         });
     });
 });
