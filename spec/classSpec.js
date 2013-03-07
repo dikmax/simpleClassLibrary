@@ -68,7 +68,9 @@ describe("Class Library", function () {
                 this.__super__();
             };
             obj = new ChildClass();
-            obj.method();
+            expect(function () {
+                obj.method();
+            }).not.toThrow();
 
             expect(obj.prop).toEqual(1);
         });
@@ -85,6 +87,46 @@ describe("Class Library", function () {
             obj = new ChildClass();
 
             expect(obj.prop).toEqual(1);
+        });
+
+        it('should pass parameters', function () {
+            // TODO
+            expect(true).toBe(false);
+        });
+
+        // Checking exceptions
+        it('should throw exception if no constructor property in object', function () {
+            ChildClass = function () {};
+            ChildClass.prototype.method = function () {
+                this.__super__();
+            };
+            obj = new ChildClass();
+
+            expect(function () {
+                obj.method();
+            }).toThrow();
+        });
+
+        it('should throw exception if no parent method found', function () {
+            // TODO
+            expect(true).toBe(false);
+        });
+
+        it('should throw exception if method not found in prototype', function () {
+            ParentClass = function () {};
+            ParentClass.__extends__(Object);
+            ParentClass.prototype.method = function () {};
+
+            ChildClass = function () {};
+            ChildClass.__extends__(ParentClass);
+            obj = new ChildClass();
+            obj.method = function () {
+                this.__super__();
+            };
+
+            expect(function () {
+                obj.method();
+            }).toThrow();
         });
     });
 
@@ -133,6 +175,17 @@ describe("Class Library", function () {
 
             ChildClass.static.method();
             expect(ChildClass.static.prop).toEqual(1);
+        });
+
+        // Checking exceptions
+        it('should throw exception if no parent method found', function () {
+            // TODO
+            expect(true).toBe(false);
+        });
+
+        it('should throw exception if method not found in context object', function () {
+            // TODO
+            expect(true).toBe(false);
         });
     });
 });
