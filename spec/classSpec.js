@@ -131,7 +131,6 @@ describe("Class Library", function () {
 
 
         it('should throw exception if no parent method found', function () {
-            // TODO
             ParentClass = function () {};
             ParentClass.__extends__(Object);
 
