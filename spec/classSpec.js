@@ -11,7 +11,7 @@ describe("Class Library", function () {
             };
         });
 
-        it('should allow extend Object', function () {
+        it('should allow to extend Object', function () {
             ChildClass.__extends__(Object);
             obj = new ChildClass();
             expect(obj instanceof ChildClass).toBeTruthy();
